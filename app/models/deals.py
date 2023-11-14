@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, Integer, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 import datetime
-
 from app.database import Base
 
 
@@ -14,3 +14,5 @@ class Deal(Base):
 
     buyer_user_id = Column(Integer, ForeignKey("users.user_id"))
     product_id = Column(Integer, ForeignKey("products.product_id"))
+
+    buyer = relationship("User", back_populates="deals")

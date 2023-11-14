@@ -3,10 +3,12 @@ from sqlalchemy.orm import relationship
 
 
 from app.database import Base
+from app.models.comments import Comment  # noqa
+from app.models.likes import Like  # noqa
 
 
 class Product(Base):
-    __tablename__ = "users"
+    __tablename__ = "products"
 
     product_id = Column(Integer, primary_key=True, index=True)
     title = Column(String(length=128))
@@ -16,6 +18,7 @@ class Product(Base):
     image = Column(String(length=128))
 
     user_id = Column(Integer, ForeignKey("users.user_id"))
-    products = relationship("User", back_populates="products")
     comments = relationship("Comment", back_populates="product")
     likes = relationship("Like", back_populates="product")
+
+    owner = relationship("User", back_populates="products")

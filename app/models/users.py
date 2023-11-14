@@ -2,6 +2,11 @@ from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.database import Base
+from app.models.products import Product  # noqa
+from app.models.deals import Deal  # noqa
+from app.models.comments import Comment  # noqa
+from app.models.likes import Like  # noqa
+from app.models.keywords import Keyword  # noqa
 
 
 class User(Base):
