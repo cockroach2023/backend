@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter
-
+from fastapi.middleware.cors import CORSMiddleware
 from .routers import users, products
 from .database import Base, engine
 
@@ -7,6 +7,19 @@ from .database import Base, engine
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 router = APIRouter()
 
 app.include_router(

@@ -13,14 +13,14 @@ class UserCreate(UserBase):
     password: str
     activity_area: str
     nickname: str
-    profile: str
+    profile: str | None = None
 
 
 class User(UserBase):
     user_id: int
     activity_area: str
     nickname: str
-    profile: str
+    profile: str | None = None
     is_admin: bool
     is_blocked: bool
 
