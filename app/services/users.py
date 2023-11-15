@@ -1,11 +1,10 @@
 from ..schemas import users as schema
-from ..schemas import keyword as keyword_schema
+from ..schemas.keywords import KeywordRequest, KeywordResponse
 from ..models import users as model
 from ..models import keywords as keywords_model
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi import HTTPException
-from typing import List
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -42,40 +41,50 @@ def get_user(db: Session, username: str):
 
 
 # 키워드 등록 함수
-def register_keyword(db: Session, keyword_request:keyword_schema.KeywordRequest):
-    db_user = db.query(model.User).filter(model.User.user_id == keyword_request.user_id).first()
-    
+def register_keyword(db: Session, keyword: KeywordRequest):
+    db_user = db.query(model.User).filter(model.User.user_id == keyword.user_id).first()
+
     if db_user:
-        new_keyword = keywords_model.Keyword(content=keyword_request.content, user=db_user)
+        new_keyword = keywords_model.Keyword(content=keyword.content, user=db_user)
         db.add(new_keyword)
         db.commit()
         db.refresh(db_user)
-        return keyword_schema.KeywordResponse(keyword_id=new_keyword.keyword_id, content=new_keyword.content)
+        return KeywordResponse(
+            keyword_id=new_keyword.keyword_id, content=new_keyword.content
+        )
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
 
 def convert_to_keyword_response(keyword):
-    return keyword_schema.KeywordResponse(keyword_id=keyword.keyword_id, content=keyword.content)
+    return KeywordResponse(keyword_id=keyword.keyword_id, content=keyword.content)
 
 
 # 사용자 별 모든 키워드 가져오기
 def get_all_keywords(db: Session, user_id: int):
     db_user = db.query(model.User).filter(model.User.user_id == user_id).first()
-    
+
     if db_user:
-        keywords = db.query(keywords_model.Keyword).filter(keywords_model.Keyword.user_id == user_id).all()
+        keywords = (
+            db.query(keywords_model.Keyword)
+            .filter(keywords_model.Keyword.user_id == user_id)
+            .all()
+        )
         return [convert_to_keyword_response(keyword) for keyword in keywords]
     else:
         raise HTTPException(status_code=404, detail="User not found")
-    
-    
+
+
 # 키워드 삭제하기
 def delete_keyword(db: Session, keyword_id: int):
-   keyword = db.query(keywords_model.Keyword).filter(keywords_model.Keyword.keyword_id == keyword_id).first()
-   if keyword:
-       db.delete(keyword)
-       db.commit()
-       return {"message": "successfully deleted"}
-   else:
+    keyword = (
+        db.query(keywords_model.Keyword)
+        .filter(keywords_model.Keyword.keyword_id == keyword_id)
+        .first()
+    )
+    if keyword:
+        db.delete(keyword)
+        db.commit()
+        return {"message": "successfully deleted"}
+    else:
         raise HTTPException(status_code=404, detail="Keyword not found")

@@ -1,4 +1,4 @@
-from ..schemas.keywords import KeywordRequest, Keyword
+from ..schemas.keywords import KeywordRequest
 from ..models.users import User as UserModel
 from ..models.keywords import Keyword as KeywordModel
 from sqlalchemy.orm import Session
