@@ -5,3 +5,4 @@ passlib
 python-jose
 python-multipart
 pydantic-settings
+psycopg2

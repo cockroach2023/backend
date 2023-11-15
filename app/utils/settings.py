@@ -8,3 +8,4 @@ class Settings(BaseSettings):
 
     ALGORITHM: str
     SECRET_KEY: str
+    POSTGRES_URL: str
