@@ -13,3 +13,9 @@ def create_product(db: Session, product: schema.ProductCreate, current_user: str
     db.commit()
     db.refresh(db_product)
     return db_product
+
+
+def get_product(db: Session, product_id: int):
+    return (
+        db.query(model.Product).filter(model.Product.product_id == product_id).first()
+    )

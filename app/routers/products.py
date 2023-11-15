@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from ..schemas import products as schema
@@ -23,3 +23,14 @@ async def create_product(
     current_user: str = Depends(get_current_user),
 ):
     return service.create_product(db, product, current_user)
+
+
+@router.get("/{product_id}")
+async def get_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+):
+    product = service.get_product(db, product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
