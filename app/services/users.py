@@ -31,3 +31,7 @@ def auth_user(db: Session, username: str, password: str):
         return False
 
     return db_user
+
+
+def get_user(db: Session, username: str):
+    return db.query(model.User).filter(model.User.username == username).first()
