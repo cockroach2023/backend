@@ -12,9 +12,8 @@ class Product(Base):
 
     product_id = Column(Integer, primary_key=True, index=True)
     title = Column(String(length=128))
-    content = Column(String(length=1024))
-    price = Column(Integer)
     description = Column(String(length=128))
+    price = Column(Integer)
     image = Column(String(length=128))
 
     user_id = Column(Integer, ForeignKey("users.user_id"))
