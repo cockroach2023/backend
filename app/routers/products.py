@@ -32,7 +32,7 @@ async def create_product(
     return service.create_product(db, product, current_user.user_id)
 
 
-@router.get("/{product_id}")
+@router.get("/{product_id}", response_model=schema.ProductDetail)
 async def get_product(
     product_id: int,
     db: Session = Depends(get_db),

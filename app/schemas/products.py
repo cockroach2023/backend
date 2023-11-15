@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from .users import User
 
 
 class ProductBase(BaseModel):
@@ -14,6 +15,13 @@ class ProductCreate(ProductBase):
 
 class Product(ProductBase):
     product_id: int
+
+    class Config:
+        from_attribute = True
+
+
+class ProductDetail(Product):
+    owner: User
 
     class Config:
         from_attribute = True
