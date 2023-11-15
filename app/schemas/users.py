@@ -1,26 +1,28 @@
-from typing import Optional
 from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    pass
-
-
-class UserLogin(BaseModel):
     username: str
+
+
+class UserPassword(BaseModel):
     password: str
 
 
-class UserCreate(UserLogin):
+class UserCreate(UserBase):
+    password: str
     activity_area: str
     nickname: str
-    profile: str = None
+    profile: str
 
 
-class User(UserCreate):
+class User(UserBase):
     user_id: int
-    is_admin: Optional[bool] = False
-    is_blocked: Optional[bool] = False
+    activity_area: str
+    nickname: str
+    profile: str
+    is_admin: bool
+    is_blocked: bool
 
     class Config:
         from_attribute = True

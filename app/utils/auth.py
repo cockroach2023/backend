@@ -3,8 +3,11 @@ from datetime import datetime, timedelta
 from typing import Annotated
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
 from ..schemas import tokens as schema
 from ..utils.settings import Settings
+from ..database import get_db
+from ..services import users as service
 
 settings = Settings().dict()
 ALGORITHM = settings["ALGORITHM"]
@@ -24,7 +27,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(
+    token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)
+):
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
@@ -39,4 +44,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except JWTError:
         raise credentials_exception
 
-    return token_data.username
+    user = service.get_user(db, username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    return user

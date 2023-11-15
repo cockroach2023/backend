@@ -39,6 +39,6 @@ async def login_user(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/me")
-async def read_users_me(current_user: str = Depends(get_current_user)):
-    return {"username": current_user}
+@router.get("/me", response_model=schema.User)
+async def read_users_me(current_user: schema.User = Depends(get_current_user)):
+    return current_user
