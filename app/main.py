@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import users, products, keywords, deals
+from .routers import users, products, keywords, deals, notices
 from .database import Base, engine
 
 # 테이블 생성
@@ -41,4 +41,10 @@ app.include_router(
     deals.router,
     prefix="/deal",
     tags=["deal"],
+)
+
+app.include_router(
+    notices.router,
+    prefix="/notice",
+    tags=["notice"],
 )

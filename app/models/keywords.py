@@ -12,3 +12,4 @@ class Keyword(Base):
     user_id = Column(Integer, ForeignKey("users.user_id"))
 
     user = relationship("User", back_populates="keywords")
+    notices = relationship("Notice", back_populates="keywords")
