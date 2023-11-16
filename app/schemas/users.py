@@ -13,7 +13,6 @@ class UserCreate(UserBase):
     password: str
     activity_area: str
     nickname: str
-    profile: str | None = None
 
 
 class User(UserBase):

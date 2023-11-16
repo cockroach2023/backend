@@ -1,10 +1,11 @@
+from sqlalchemy.orm import Session
+from fastapi import UploadFile
 from ..schemas.products import ProductCreate
 from ..models.products import Product as ProductModel
 from ..models.notices import Notice as NoticeModel
-from ..models.keywords import Keyword as KeywordModel
 from ..models.users import User as UserModel
-from sqlalchemy.orm import Session
 from ..services.keywords import get_all_keywords
+from ..image_db import upload_file
 
 
 def get_all_product(
@@ -28,12 +29,13 @@ def get_all_product(
     return query.all()
 
 
-def create_product(db: Session, product: ProductCreate, user_id: int):
+def create_product(
+    db: Session, product: ProductCreate, image: UploadFile, user_id: int
+):
     db_product = ProductModel(**product.dict(), user_id=user_id)
-    
+
     # 모든 키워드 정보 가져오기(User에 상관 없이)
     keywords = get_all_keywords(db)
-    
 
     # 각 키워드의 content 값이 product의 title에 포함되는지 확인
     for keyword in keywords:
@@ -41,10 +43,14 @@ def create_product(db: Session, product: ProductCreate, user_id: int):
             # Notice 레코드 생성
             db_notice = NoticeModel(user_id=user_id, keyword_id=keyword.keyword_id)
             db.add(db_notice)
-    
+
+    # 이미지 파일 업로드
+    file_url = upload_file("product/", image)
+    db_product.image = file_url
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
+
     return db_product
 
 

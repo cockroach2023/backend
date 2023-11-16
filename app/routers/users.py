@@ -1,15 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from ..schemas.users import User, UserCreate
-from ..schemas.keywords import KeywordRequest, KeywordResponse
 from ..schemas.tokens import Token
 from ..services import users as service
 from ..database import get_db
 from ..utils.auth import create_access_token, get_current_user
-from typing import List
 
 router = APIRouter()
 
@@ -17,8 +15,25 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 @router.post("/signup", response_model=User)
-def signup_user(user: UserCreate, db: Session = Depends(get_db)):
-    return service.signup_user(db, user)
+def signup_user(
+    username: Annotated[str, Form()],
+    password: Annotated[str, Form()],
+    nickname: Annotated[str, Form()],
+    activity_area: Annotated[str, Form()],
+    db: Session = Depends(get_db),
+    profile: UploadFile = File(None),
+):
+    try:
+        user = UserCreate(
+            username=username,
+            password=password,
+            nickname=nickname,
+            activity_area=activity_area,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+    return service.signup_user(db, user, profile)
 
 
 @router.post("/login", response_model=Token)

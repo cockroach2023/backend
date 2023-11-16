@@ -1,26 +1,34 @@
+from fastapi import HTTPException, UploadFile
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+from typing import Optional
 from ..schemas import users as schema
 from ..schemas.keywords import KeywordRequest, KeywordResponse
 from ..models import users as model
 from ..models import keywords as keywords_model
-from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-from fastapi import HTTPException
+from ..image_db import upload_file
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def signup_user(db: Session, user: schema.UserCreate):
+def signup_user(db: Session, user: schema.UserCreate, image: Optional[UploadFile]):
     user_dict = user.dict()
     # 비밀번호 암호화
     user_dict["password"] = pwd_context.hash(user_dict["password"])
 
-    db.user = model.User(**user_dict)
+    db_user = model.User(**user_dict)
 
-    db.add(db.user)
+    if image:
+        file_url = upload_file("profile/", image)
+    else:
+        file_url = None
+
+    db_user.profile = file_url
+    db.add(db_user)
     db.commit()
-    db.refresh(db.user)
+    db.refresh(db_user)
 
-    return db.user
+    return db_user
 
 
 def auth_user(db: Session, username: str, password: str):

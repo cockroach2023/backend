@@ -7,3 +7,4 @@ python-multipart
 pydantic-settings
 psycopg2
 bcrypt
+boto3

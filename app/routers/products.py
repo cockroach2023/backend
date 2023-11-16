@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Annotated
 from ..schemas.products import ProductCreate, Product, ProductDetail
 from ..schemas.users import User
 from ..services import products as service
@@ -25,11 +25,22 @@ async def get_all_products(
 
 @router.post("", response_model=Product)
 async def create_product(
-    product: ProductCreate,
+    title: Annotated[str, Form()],
+    description: Annotated[str, Form()],
+    price: Annotated[int, Form()],
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    image: UploadFile = File(...),
 ):
-    return service.create_product(db, product, current_user.user_id)
+    if image.content_type not in ["image/jpeg", "image/png"]:
+        raise HTTPException(status_code=415, detail="File must be an image")
+
+    try:
+        product = ProductCreate(title=title, description=description, price=price)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+    return service.create_product(db, product, image, current_user.user_id)
 
 
 @router.get("/{product_id}", response_model=ProductDetail)
