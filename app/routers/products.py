@@ -37,8 +37,6 @@ async def create_product(
 
     try:
         product = ProductCreate(title=title, description=description, price=price)
-    except ConnectionError as e:
-        raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))
 

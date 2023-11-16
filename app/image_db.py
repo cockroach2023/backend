@@ -35,8 +35,9 @@ def upload_file(path, file):
         file_url += "." + ext
 
         s3.upload_fileobj(file.file, BUCKET_NAME, file_url)
-        s3.close()
 
-        return os.path.join(BUCKET_HOST, file_url)
     except Exception as e:
-        raise ConnectionError(e)
+        raise e
+    else:
+        s3.close()
+        return os.path.join(BUCKET_HOST, file_url)
