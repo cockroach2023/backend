@@ -26,8 +26,7 @@ async def get_all_keywords_by_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    keywords = service.get_all_keywords(db, current_user.user_id)
-    print(keywords)
+    keywords = service.get_all_keywords_by_user(db, current_user.user_id)
     return keywords
 
 

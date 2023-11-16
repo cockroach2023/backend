@@ -16,11 +16,13 @@ def register_keyword(db: Session, keyword: KeywordRequest, user_id: int):
 
 # 사용자 별 모든 키워드 가져오기
 def get_all_keywords_by_user(db: Session, user_id: int):
-    return db.query(KeywordModel).filter(UserModel.user_id == user_id).all()
+    return db.query(KeywordModel).filter(KeywordModel.user_id == user_id).all()
+
 
 # 모든 키워드 가져오기
 def get_all_keywords(db: Session):
     return db.query(KeywordModel).all()
+
 
 # 키워드 삭제하기
 def delete_keyword(db: Session, keyword_id: int, user_id: int):
