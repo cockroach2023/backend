@@ -19,7 +19,7 @@ def get_all_product(
 
     if title:
         query = query.filter(ProductModel.title.contains(title))
-    if area:
+    if area and area != " ":
         query = query.filter(UserModel.activity_area.contains(area))
     if price_start:
         query = query.filter(ProductModel.price >= price_start)
