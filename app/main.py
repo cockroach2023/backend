@@ -25,12 +25,15 @@ router = APIRouter()
 app.include_router(
     users.router,
     prefix="/user",
+    tags=["user"],
 )
 app.include_router(
     products.router,
     prefix="/product",
+    tags=["product"],
 )
 app.include_router(
     keywords.router,
     prefix="/keyword",
+    tags=["keyword"],
 )
