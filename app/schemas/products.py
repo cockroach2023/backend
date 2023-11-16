@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from .users import User
-from typing import Optional
 
 
 class ProductBase(BaseModel):

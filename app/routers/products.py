@@ -84,3 +84,11 @@ async def get_liked_products(
     current_user: User = Depends(get_current_user),
 ):
     return service.get_liked_products(db, current_user.user_id)
+
+
+@router.get("/user/purchased", response_model=list[Product])
+async def get_purchased_products(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return service.get_purchased_products(db, current_user.user_id)
