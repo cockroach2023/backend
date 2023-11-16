@@ -68,3 +68,11 @@ async def like_product(
     if not product:
         raise HTTPException(status_code=409, detail="Already liked")
     return product
+
+
+@router.get("/user/selling", response_model=list[Product])
+async def get_selling_products(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return service.get_selling_products(db, current_user.user_id)

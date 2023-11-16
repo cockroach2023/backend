@@ -96,3 +96,12 @@ def like_product(db: Session, product_id: int, user_id: int):
 
     # 업데이트 된 product 반환
     return get_product(db, product_id)
+
+
+def get_selling_products(db: Session, user_id: int):
+    return (
+        db.query(ProductModel)
+        .filter(ProductModel.user_id == user_id)
+        .filter(ProductModel.is_sold.is_(False))
+        .all()
+    )

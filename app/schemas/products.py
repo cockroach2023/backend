@@ -14,7 +14,7 @@ class ProductCreate(ProductBase):
 
 
 class Product(ProductBase):
-    image: Optional[str]
+    image: str
     product_id: int
 
     class Config:
