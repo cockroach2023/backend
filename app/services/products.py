@@ -105,3 +105,13 @@ def get_selling_products(db: Session, user_id: int):
         .filter(ProductModel.is_sold.is_(False))
         .all()
     )
+
+
+def get_liked_products(db: Session, user_id: int):
+    return (
+        db.query(ProductModel)
+        .filter(ProductModel.is_sold.is_(False))
+        .join(LikeModel, ProductModel.product_id == LikeModel.product_id)
+        .filter(LikeModel.user_id == user_id)
+        .all()
+    )
