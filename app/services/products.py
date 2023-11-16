@@ -7,8 +7,10 @@ from sqlalchemy.orm import Session
 def get_all_product(
     db: Session, title: str, area: str, price_start: int, price_end: int
 ):
-    query = db.query(ProductModel).join(
-        UserModel, ProductModel.user_id == UserModel.user_id
+    query = (
+        db.query(ProductModel)
+        .filter(ProductModel.is_sold.is_(False))
+        .join(UserModel, ProductModel.user_id == UserModel.user_id)
     )
 
     if title:

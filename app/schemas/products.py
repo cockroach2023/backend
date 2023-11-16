@@ -22,6 +22,7 @@ class Product(ProductBase):
 
 class ProductDetail(Product):
     owner: User
+    is_sold: bool
 
     class Config:
         from_attribute = True
