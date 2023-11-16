@@ -12,7 +12,7 @@ class Deal(Base):
 
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    buyer_user_id = Column(Integer, ForeignKey("users.user_id"))
+    buyer_id = Column(Integer, ForeignKey("users.user_id"))
     product_id = Column(Integer, ForeignKey("products.product_id"))
 
     buyer = relationship("User", back_populates="deals")
