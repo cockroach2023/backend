@@ -44,26 +44,3 @@ async def login_user(
 @router.get("/me", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
-
-
-# 키워드 관련 API
-
-
-# 관심 키워드 추가하기
-@router.post("/keyword", response_model=KeywordResponse)
-async def register_keyword(
-    keyword_request: KeywordRequest, db: Session = Depends(get_db)
-):
-    return service.register_keyword(db, keyword_request)
-
-
-# 사용자 별 모든 키워드 가져오기
-@router.get("/keywords", response_model=List[KeywordResponse])
-async def get_all_keywords(user_id: int, db: Session = Depends(get_db)):
-    return service.get_all_keywords(db, user_id)
-
-
-# 키워드 삭제하기
-@router.delete("/keyword/{keyword_id}")
-def delete_keyword(keyword_id: int, db: Session = Depends(get_db)):
-    return service.delete_keyword(db, keyword_id)
