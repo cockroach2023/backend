@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
 
@@ -15,6 +15,7 @@ class Product(Base):
     description = Column(String(length=128))
     price = Column(Integer)
     image = Column(String(length=128))
+    is_sold = Column(Boolean, default=False)
 
     user_id = Column(Integer, ForeignKey("users.user_id"))
     comments = relationship("Comment", back_populates="product")
