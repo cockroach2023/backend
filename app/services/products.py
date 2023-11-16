@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
 from fastapi import UploadFile
+from sqlalchemy import func
 from ..schemas.products import ProductCreate
 from ..models.products import Product as ProductModel
 from ..models.notices import Notice as NoticeModel
 from ..models.users import User as UserModel
+from ..models.likes import Like as LikeModel
 from ..services.keywords import get_all_keywords
 from ..image_db import upload_file
 
@@ -63,4 +65,34 @@ def create_product(
 
 
 def get_product(db: Session, product_id: int):
-    return db.query(ProductModel).filter(ProductModel.product_id == product_id).first()
+    db_product = (
+        db.query(ProductModel, func.count(LikeModel.like_id).label("like_count"))
+        .filter(ProductModel.product_id == product_id)
+        .outerjoin(LikeModel)
+        .first()
+    )
+    if not db_product:
+        return None
+    product, like_count = db_product
+    setattr(product, "like_count", like_count)
+    return product
+
+
+def like_product(db: Session, product_id: int, user_id: int):
+    # 이미 좋아요를 눌렀는지 확인
+    db_like = (
+        db.query(LikeModel)
+        .filter(LikeModel.product_id == product_id)
+        .filter(LikeModel.user_id == user_id)
+        .first()
+    )
+    if db_like:
+        return None
+
+    db_like = LikeModel(user_id=user_id, product_id=product_id)
+    db.add(db_like)
+    db.commit()
+    db.refresh(db_like)
+
+    # 업데이트 된 product 반환
+    return get_product(db, product_id)

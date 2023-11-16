@@ -52,3 +52,19 @@ async def get_product(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
+
+
+@router.post("/{product_id}/like", response_model=ProductDetail)
+async def like_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    product = service.get_product(db, product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    product = service.like_product(db, product_id, current_user.user_id)
+    if not product:
+        raise HTTPException(status_code=409, detail="Already liked")
+    return product

@@ -25,6 +25,7 @@ class ProductDetail(Product):
     owner: User
     is_sold: bool
     image: str
+    like_count: int
 
     class Config:
         from_attribute = True
