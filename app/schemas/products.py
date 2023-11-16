@@ -1,12 +1,12 @@
 from pydantic import BaseModel
 from .users import User
+from typing import Optional
 
 
 class ProductBase(BaseModel):
     title: str
     description: str
-    price: float
-    image: str
+    price: int
 
 
 class ProductCreate(ProductBase):
@@ -14,6 +14,7 @@ class ProductCreate(ProductBase):
 
 
 class Product(ProductBase):
+    image: Optional[str]
     product_id: int
 
     class Config:
@@ -23,6 +24,7 @@ class Product(ProductBase):
 class ProductDetail(Product):
     owner: User
     is_sold: bool
+    image: str
 
     class Config:
         from_attribute = True

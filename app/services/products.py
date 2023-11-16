@@ -1,7 +1,10 @@
+from sqlalchemy.orm import Session
+from typing import Optional
+from fastapi import UploadFile
 from ..schemas.products import ProductCreate
 from ..models.products import Product as ProductModel
 from ..models.users import User as UserModel
-from sqlalchemy.orm import Session
+from ..image_db import upload_file
 
 
 def get_all_product(
@@ -25,11 +28,16 @@ def get_all_product(
     return query.all()
 
 
-def create_product(db: Session, product: ProductCreate, user_id: int):
+def create_product(
+    db: Session, product: ProductCreate, image: Optional[UploadFile], user_id: int
+):
     db_product = ProductModel(**product.dict(), user_id=user_id)
+    file_url = upload_file("product/", image)
+    db_product.image = file_url
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
+
     return db_product
 
 
