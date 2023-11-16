@@ -30,3 +30,16 @@ async def register_keyword(
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# 판매자가 구매 요청 수락
+@router.patch("/{deal_id}/accept", response_model=Deal)
+async def accept_deal(
+    deal_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        return service.accept_deal(db, deal_id=deal_id, user_id=current_user.user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
