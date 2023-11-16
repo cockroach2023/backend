@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class DealBase(BaseModel):
+    deal_id: int
     product_id: int
     buyer_id: int
 

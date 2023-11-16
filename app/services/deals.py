@@ -33,3 +33,7 @@ def requset_deal(
     db.refresh(new_deal)
 
     return new_deal
+
+
+def get_deals(db: Session, user_id: int):
+    return db.query(DealModel).filter(DealModel.product.has(user_id=user_id)).all()

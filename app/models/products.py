@@ -21,3 +21,4 @@ class Product(Base):
     likes = relationship("Like", back_populates="product")
 
     owner = relationship("User", back_populates="products")
+    deals = relationship("Deal", back_populates="product")

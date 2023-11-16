@@ -9,6 +9,14 @@ from ..schemas.deals import Deal
 router = APIRouter()
 
 
+# 판매자가 구매 요청 목록 조회
+@router.get("", response_model=list[Deal])
+async def get_deals(
+    db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    return service.get_deals(db, user_id=current_user.user_id)
+
+
 # 구매자가 구매 요청
 @router.post("", response_model=Deal)
 async def register_keyword(

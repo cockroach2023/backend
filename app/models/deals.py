@@ -16,3 +16,4 @@ class Deal(Base):
     product_id = Column(Integer, ForeignKey("products.product_id"))
 
     buyer = relationship("User", back_populates="deals")
+    product = relationship("Product", back_populates="deals")
