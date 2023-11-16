@@ -26,3 +26,4 @@ class User(Base):
     comments = relationship("Comment", back_populates="author")
     likes = relationship("Like", back_populates="user")
     keywords = relationship("Keyword", back_populates="user")
+    notices = relationship("Notice", back_populates="user")

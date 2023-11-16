@@ -22,7 +22,7 @@ async def register_keyword(
 
 # 사용자 별 모든 키워드 가져오기
 @router.get("", response_model=List[KeywordResponse])
-async def get_all_keywords(
+async def get_all_keywords_by_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
