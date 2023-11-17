@@ -108,7 +108,7 @@ async def register_commment_in_product(
 
 
 # 게시물의 모든 댓글 가져오는 기능
-@router.get("/comment", response_model=List[Comment])
+@router.get("/{product_id}/comment", response_model=List[Comment])
 async def get_all_comments(
     product_id: int,
     db: Session = Depends(get_db),
