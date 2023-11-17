@@ -121,6 +121,6 @@ def get_purchased_products(db: Session, user_id: int):
     return (
         db.query(ProductModel)
         .filter(ProductModel.is_sold.is_(True))
-        .filter(ProductModel.buyer_id == user_id)
+        .filter(ProductModel.user_id == user_id)
         .all()
     )
