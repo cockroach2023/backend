@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from .users import UserDeal
+from .products import Product
 import datetime
 
 
@@ -10,5 +12,8 @@ class DealBase(BaseModel):
 
 
 class Deal(DealBase):
+    buyer: UserDeal
+    product: Product
+
     class Config:
         from_attribute = True

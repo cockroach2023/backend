@@ -46,6 +46,8 @@ def get_deals(db: Session, user_id: int):
         db.query(DealModel)
         .filter(DealModel.product.has(user_id=user_id))
         .filter(DealModel.product.has(is_sold=False))
+        .join(DealModel.product)
+        .join(DealModel.buyer)
         .all()
     )
 

@@ -15,6 +15,12 @@ class UserCreate(UserBase):
     nickname: str
 
 
+class UserDeal(UserBase):
+    nickname: str
+    activity_area: str
+    profile: str | None = None
+
+
 class User(UserBase):
     user_id: int
     activity_area: str
