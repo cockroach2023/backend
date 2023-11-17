@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional, Annotated
 from ..schemas.products import ProductCreate, Product, ProductDetail
 from ..schemas.users import User
+from ..schemas.comments import CommentBase, Comment
 from ..services import products as service
 from ..database import get_db
 from ..utils.auth import get_current_user
@@ -92,3 +93,24 @@ async def get_purchased_products(
     current_user: User = Depends(get_current_user),
 ):
     return service.get_purchased_products(db, current_user.user_id)
+
+
+
+# 게시물에 댓글 다는 기능
+@router.post("/{product}/comment", response_model=Comment)
+async def register_commment_in_product(
+    comment: CommentBase,
+    product_id: int,
+    db:Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return service.register_commment_in_product(product_id, db, current_user.user_id, comment.content)
+
+
+# 게시물의 모든 댓글 가져오는 기능
+@router.get("/{product}/comment", response_model=List[Comment])
+async def get_all_comments(
+    product_id: int,
+    db: Session = Depends(get_db),
+):
+    return service.get_all_comments(product_id, db)
