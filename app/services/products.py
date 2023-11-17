@@ -6,6 +6,7 @@ from ..models.products import Product as ProductModel
 from ..models.notices import Notice as NoticeModel
 from ..models.users import User as UserModel
 from ..models.likes import Like as LikeModel
+from ..models.comments import Comment as CommentModel
 from ..services.keywords import get_all_keywords
 from ..image_db import upload_file
 
@@ -123,4 +124,26 @@ def get_purchased_products(db: Session, user_id: int):
         .filter(ProductModel.is_sold.is_(True))
         .filter(ProductModel.user_id == user_id)
         .all()
+    )
+
+
+# 댓글 다는 기능
+def register_commment_in_product(product_id, db, user_id, comment):
+    # comment 객체 생성
+    db_comment = CommentModel(
+        content=comment, product_id=product_id, user_id=user_id
+    )
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    
+    return db_comment
+
+
+# 모든 댓글 가져오기
+def get_all_comments(product_id, db):
+    
+    return (
+        db.query(CommentModel)
+        .filter(CommentModel.product_id == product_id).all()
     )
