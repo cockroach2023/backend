@@ -97,7 +97,7 @@ async def get_purchased_products(
 
 
 # 게시물에 댓글 다는 기능
-@router.post("/{product}/comment", response_model=Comment)
+@router.post("/comment", response_model=Comment)
 async def register_commment_in_product(
     comment: CommentBase,
     product_id: int,
@@ -108,7 +108,7 @@ async def register_commment_in_product(
 
 
 # 게시물의 모든 댓글 가져오는 기능
-@router.get("/{product}/comment", response_model=List[Comment])
+@router.get("/comment", response_model=List[Comment])
 async def get_all_comments(
     product_id: int,
     db: Session = Depends(get_db),
