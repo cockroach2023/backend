@@ -21,27 +21,27 @@ router = APIRouter()
 
 app.include_router(
     users.router,
-    prefix="/user",
+    prefix="/api/user",
     tags=["user"],
 )
 app.include_router(
     products.router,
-    prefix="/product",
+    prefix="/api/product",
     tags=["product"],
 )
 app.include_router(
     keywords.router,
-    prefix="/keyword",
+    prefix="/api/keyword",
     tags=["keyword"],
 )
 app.include_router(
     deals.router,
-    prefix="/deal",
+    prefix="/api/deal",
     tags=["deal"],
 )
 
 app.include_router(
     notices.router,
-    prefix="/notice",
+    prefix="/api/notice",
     tags=["notice"],
 )
