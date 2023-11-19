@@ -66,17 +66,28 @@ def create_product(
 
 
 def get_product(db: Session, product_id: int):
+    # Query for product details
     db_product = (
-        db.query(ProductModel, func.count(LikeModel.like_id).label("like_count"))
+        db.query(ProductModel)
         .filter(ProductModel.product_id == product_id)
-        .outerjoin(LikeModel)
         .first()
     )
+
     if not db_product:
         return None
-    product, like_count = db_product
-    setattr(product, "like_count", like_count)
-    return product
+
+    # Query for like count
+    like_count = (
+        db.query(func.count(LikeModel.like_id))
+        .filter(LikeModel.product_id == product_id)
+        .scalar()
+    )
+
+    # Attach like_count to the product
+    setattr(db_product, "like_count", like_count)
+
+    return db_product
+
 
 
 def like_product(db: Session, product_id: int, user_id: int):
