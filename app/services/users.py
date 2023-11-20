@@ -96,3 +96,44 @@ def delete_keyword(db: Session, keyword_id: int):
         return {"message": "successfully deleted"}
     else:
         raise HTTPException(status_code=404, detail="Keyword not found")
+    
+    
+    
+# 모든 유저 가져오기
+def get_all_user(db, username):
+    if username == "admin":
+        return db.query(model.User).all()
+    
+
+# 블랙리스트 등록하기
+def register_blacklist(db, user_id, current_user):
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permission denied. Only admin users can remove products."
+        )
+    else:
+        user = db.query(model.User).filter(model.User.user_id == user_id).first()
+        if user:
+            user.is_blocked = True
+            db.commit()
+            return user
+        else:
+            raise HTTPException(status_code=404, detail="User not found")
+    
+
+# 블랙리스트 해제하기
+def remove_blacklist(db, user_id, current_user):
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permission denied. Only admin users can remove products."
+        )
+    else:
+        user = db.query(model.User).filter(model.User.user_id == user_id).first()
+        if user:
+            user.is_blocked = False
+            db.commit()
+            return user
+        else:
+            raise HTTPException(status_code=404, detail="User not found")
