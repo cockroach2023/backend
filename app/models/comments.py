@@ -11,7 +11,7 @@ class Comment(Base):
     comment_id = Column(Integer, primary_key=True, index=True)
 
     content = Column(String(length=1024))
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(hours=9))
 
     product_id = Column(Integer, ForeignKey("products.product_id"))
     product = relationship("Product", back_populates="comments")

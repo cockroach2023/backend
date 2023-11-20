@@ -31,7 +31,7 @@ async def get_all_keywords_by_user(
 
 
 # 키워드 삭제하기
-@router.delete("/{keyword_id}")
+@router.delete("")
 def delete_keyword(
     keyword_id: int,
     db: Session = Depends(get_db),
