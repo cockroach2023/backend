@@ -43,18 +43,19 @@ async def login_user(
 ):
     user = service.auth_user(db, form_data.username, form_data.password)
 
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+    )
     if user.is_blocked:
         raise HTTPException(
             status_code=403,
             detail="user is blocked",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires

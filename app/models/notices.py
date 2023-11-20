@@ -12,7 +12,7 @@ class Notice(Base):
 
     notice_id = Column(Integer, primary_key=True, index=True)
 
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(hours=9))
 
     user_id = Column(Integer, ForeignKey("users.user_id"))
     keyword_id = Column(Integer, ForeignKey("keywords.keyword_id"))

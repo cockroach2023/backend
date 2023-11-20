@@ -18,7 +18,7 @@ async def get_deals(
 
 
 # 구매자가 구매 요청
-@router.post("", response_model=Deal)
+@router.post("/", response_model=Deal)
 async def register_keyword(
     product_id: int,
     db: Session = Depends(get_db),

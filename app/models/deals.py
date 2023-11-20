@@ -9,7 +9,7 @@ class Deal(Base):
 
     deal_id = Column(Integer, primary_key=True, index=True)
 
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(hours=9))
 
     buyer_id = Column(Integer, ForeignKey("users.user_id"))
     product_id = Column(Integer, ForeignKey("products.product_id"))
