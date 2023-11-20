@@ -114,3 +114,14 @@ async def get_all_comments(
     db: Session = Depends(get_db),
 ):
     return service.get_all_comments(product_id, db)
+
+
+# 해당 유저의 게시글을 전부 삭제하는 기능
+@router.post("/remove")
+async def remove_product(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    
+    return service.remove_product(user_id, db, current_user)

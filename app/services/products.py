@@ -158,3 +158,17 @@ def get_all_comments(product_id, db):
         db.query(CommentModel)
         .filter(CommentModel.product_id == product_id).all()
     )
+
+
+# 게시글 전부 삭제하는 기능
+def remove_product(user_id, db, current_user):
+    # 관리자인 경우에만
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permission denied. Only admin users can remove products."
+        )   
+    else:
+        db.query(ProductModel).filter(ProductModel.user_id == user_id).delete()
+        db.commit()
+        return {"message": f"All products for user_id {user_id} deleted successfully"}

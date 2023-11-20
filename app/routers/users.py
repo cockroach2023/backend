@@ -8,7 +8,7 @@ from ..schemas.tokens import Token
 from ..services import users as service
 from ..database import get_db
 from ..utils.auth import create_access_token, get_current_user
-
+from typing import List
 router = APIRouter()
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -43,6 +43,12 @@ async def login_user(
 ):
     user = service.auth_user(db, form_data.username, form_data.password)
 
+    if user.is_blocked:
+        raise HTTPException(
+            status_code=403,
+            detail="user is blocked",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     if not user:
         raise HTTPException(
             status_code=404,
@@ -59,3 +65,19 @@ async def login_user(
 @router.get("/me", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+# 모든 유저 조회
+@router.get("/all-user", response_model=List[User])
+async def get_all_user(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return service.get_all_user(db, current_user.username)
+
+# 블랙리스트 등록
+@router.post("/register/blacklist", response_model=User)
+async def register_blacklist(user_id : int ,db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return service.register_blacklist(db, user_id, current_user)
+
+
+# 블랙리스트 해제
+@router.post("/remove/blacklist", response_model=User)
+async def register_blacklist(user_id : int ,db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return service.remove_blacklist(db, user_id, current_user)
